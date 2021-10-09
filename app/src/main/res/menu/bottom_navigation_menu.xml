@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/home2"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_home_24"
+        app:showAsAction="always"
+        android:orderInCategory="1"
+        android:title="Inicio" />
+    <item
+        android:id="@+id/search"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_search_24"
+        app:showAsAction="always"
+        android:orderInCategory="2"
+        android:title="Buscar"/>
+
+    <item
+        android:id="@+id/library"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_queue_music_24"
+        app:showAsAction="always"
+        android:orderInCategory="2"
+        android:title="Biblioteca"/>
+</menu>
