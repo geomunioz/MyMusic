@@ -6,22 +6,23 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 
 public class SongViewModel extends ViewModel {
-    private MutableLiveData<Song> itemSong;
-    private MutableLiveData<List<Song>> listSong;
+    private MutableLiveData<String> itemSong;
+    private MutableLiveData<List<Song>> listSong = new MutableLiveData<List<Song>>();;
 
-    public MutableLiveData<Song> getSong(){
-
+    public MutableLiveData<String> getItemSong(){
+        if (itemSong == null) {
+            itemSong = new MutableLiveData<String>();
+        }
         return itemSong;
     }
 
     public MutableLiveData<List<Song>> getListSong(){
         if(listSong==null){
             System.out.println("Hola dentro de ViewModel");
-            return new MutableLiveData<List<Song>>();
+            listSong =  new MutableLiveData<List<Song>>();
         }
-        System.out.println("Hola ya hay datos");
+        System.out.println("Hola ya hay datos: ");
         return listSong;
     }
-
 
 }

@@ -8,15 +8,19 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
@@ -24,12 +28,13 @@ import com.google.android.material.card.MaterialCardView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MusicObserver{
     BottomNavigationView bottomNavigation;
     MaterialCardView playerMin;
     player player = new player();
+    private ListSong listSong;
 
-    private SongViewModel model;
+    private List<Song> myMusic;
 
 
     @Override
@@ -37,59 +42,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpNavigation();
-
         playerMin = (MaterialCardView) findViewById(R.id.playerMin);
+        myMusic = new ArrayList<>();
 
-        //Creacion de ViewModel
-        model = new ViewModelProvider(this).get(SongViewModel.class);
-        loadMusic();
-    }
+        listSong = ListSong.getInstance();
+        listSong.init(this);
+        listSong.setMusica(DataManager.getData(this));
 
-    public void loadMusic(){
-        List<Song> listSong = new ArrayList<>();
-
-        ContentResolver contentResolver = getContentResolver();
-        Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor songCursor = contentResolver.query(songUri, null, null, null, null);
-        if(songCursor != null && songCursor.moveToFirst()) {
-            int songId = songCursor.getColumnIndex(MediaStore.Audio.Media._ID);
-            int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
-            int songAlbum = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
-            int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
-            int songSize = songCursor.getColumnIndex(MediaStore.Audio.Media.SIZE);
-            int songMimeType = songCursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE);
-            int songDuration = songCursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
-            int songTitleURI = songCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
-
-            do {
-                long currentId = songCursor.getLong(songId);
-                String currentTitle = songCursor.getString(songTitle);
-                String currentAlbum = songCursor.getString(songAlbum);
-                String currentArtist = songCursor.getString(songArtist);
-                String currentSize = songCursor.getString(songSize);
-                String currentMimeType = songCursor.getString(songMimeType);
-                String currentDuration = songCursor.getString(songDuration);
-                String currentTitleUri = songCursor.getString(songTitleURI);
-
-                if(currentMimeType.equalsIgnoreCase("audio/mpeg")) {
-                    int duration = Integer.parseInt(currentDuration);
-
-                    Song nueva = new Song(currentId, currentTitle, currentArtist, currentAlbum, duration);
-                    listSong.add(nueva);
-                    System.out.println("Lista: "+listSong.size());
-
-                    System.out.println("id: " + currentId);
-                    System.out.println("Title: " + currentTitle);
-                    System.out.println("Album: " + currentAlbum);
-                    System.out.println("Artist: " + currentArtist);
-                    System.out.println("Size: " + currentSize);
-                    System.out.println("AlbumArtist: " + currentMimeType);
-                    System.out.println("Duration: " + duration);
-                    System.out.println("TitleUri: " + currentTitleUri);
-                }
-            } while(songCursor.moveToNext());
-        }
-        model.getListSong().postValue(listSong);
+        myMusic.addAll(listSong.getMusica());
 
     }
 
@@ -124,4 +84,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void OnPlayListChange(List<Song> music) {
+        myMusic.clear();
+        myMusic.addAll(music);
+        Log.i("Musica", "OnPlayListChange: "+myMusic.size());
+    }
+
+    @Override
+    public void ActualSongChange(Song song) {
+        SongChange(song);
+    }
+
+    public void SongChange(Song song){
+        TextView titleSong = (TextView) findViewById(R.id.titleSong);
+        TextView nameArtist = (TextView) findViewById(R.id.nameArtist);
+
+        titleSong.setText(song.getTitle());
+        nameArtist.setText(song.getArtist());
+    }
 }

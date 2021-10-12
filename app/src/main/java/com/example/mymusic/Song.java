@@ -23,8 +23,8 @@ public class Song {
         return title;
     }
 
-    public int getDuration(){
-        return duration;
+    public String getArtist(){
+        return artist;
     }
 
 }

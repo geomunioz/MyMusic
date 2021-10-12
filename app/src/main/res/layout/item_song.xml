@@ -8,9 +8,7 @@
         android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="589dp"
         android:backgroundTint="@color/black_100"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -30,34 +28,34 @@
                 android:scaleType="centerCrop"
 
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/linearLayout3"
+                app:layout_constraintEnd_toStartOf="@+id/linearLayout"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/album1" />
 
             <LinearLayout
-                android:id="@+id/linearLayout3"
+                android:id="@+id/linearLayout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:padding="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/materialButton2"
+                app:layout_constraintEnd_toStartOf="@+id/materialButton"
                 app:layout_constraintStart_toEndOf="@+id/imageView">
 
                 <!-- Title, secondary and supporting text -->
                 <TextView
+                    android:id="@+id/txtViewNameSong"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Me Muero"
                     android:textColor="?attr/colorOnPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/txtViewNameArtist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Carlos Rivera"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?attr/colorOnPrimary" />
 
@@ -65,7 +63,7 @@
 
             <!-- Buttons -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/materialButton2"
+                android:id="@+id/materialButton"
                 android:layout_width="50dp"
                 android:layout_height="0dp"
                 app:icon="@drawable/ic_baseline_more_vert_24"
