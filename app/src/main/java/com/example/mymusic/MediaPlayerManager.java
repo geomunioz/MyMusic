@@ -19,6 +19,9 @@ public class MediaPlayerManager {
     private Song song;
     private MediaPlayer media;
     private Runnable nuevo;
+    private Thread actual;
+    private Boolean exitThread = false;
+    private Boolean random = false;
     private List<MediaListener> suscribers;
 
     public MediaPlayerManager() {
@@ -26,14 +29,10 @@ public class MediaPlayerManager {
         this.media = new MediaPlayer();
         this.media.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-    }
-
-    public void newPLay(){
-        /*nuevo = new Runnable() {
+        nuevo = new Runnable() {
             @Override
             public void run() {
-
-                while(media.getCurrentPosition()!=media.getDuration()){
+                while(media.getCurrentPosition() != media.getDuration() && !exitThread){
                     if(media.isPlaying()){
                         try {
                             sleep(1000);
@@ -46,7 +45,12 @@ public class MediaPlayerManager {
                     }
                 }
             }
-        };*/
+        };
+    }
+
+    public void newPLay(){
+        actual = new Thread(nuevo);
+        actual.start();
     }
 
     public void prepareSong( Song cancion){
@@ -57,10 +61,12 @@ public class MediaPlayerManager {
             media.stop();
             media.release();
             try {
+                exitThread = true;
                 media = new MediaPlayer();
                 media.setDataSource(context,uri);
                 media.prepare();
                 media.start();
+                exitThread = false;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -91,7 +97,7 @@ public class MediaPlayerManager {
     }
 
     public void Pause(){
-        media.stop();
+        media.pause();
     }
 
     public boolean isActivo(){
@@ -116,6 +122,14 @@ public class MediaPlayerManager {
 
     public void setContext(Context contexto){
         context = contexto;
+    }
+
+    public void setRandom(Boolean var){
+        random = var;
+    }
+
+    public Boolean getRandom(){
+        return random;
     }
 
 }

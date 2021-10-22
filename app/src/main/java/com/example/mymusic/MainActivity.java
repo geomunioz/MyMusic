@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements MusicObserver, Me
         myMusic = new ArrayList<>();
 
         btn_play = (Button)findViewById(R.id.playMin);
-        btn_play.setBackgroundResource(R.drawable.ic_baseline_play_arrow_24);
+
 
         listSong = ListSong.getInstance();
         listSong.init(this);
@@ -75,6 +75,22 @@ public class MainActivity extends AppCompatActivity implements MusicObserver, Me
 
         state = false;
 
+        if(manager.isActivo()){
+            btn_play.setBackgroundResource(R.drawable.ic_baseline_pause_24);
+        }else {
+            btn_play.setBackgroundResource(R.drawable.ic_baseline_play_arrow_24);
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(manager.isActivo()){
+            btn_play.setBackgroundResource(R.drawable.ic_baseline_pause_24);
+        }else {
+            btn_play.setBackgroundResource(R.drawable.ic_baseline_play_arrow_24);
+        }
     }
 
     private void setUpNavigation() {
@@ -148,21 +164,26 @@ public class MainActivity extends AppCompatActivity implements MusicObserver, Me
             mediaPlayer.start();
             btn_play.setBackgroundResource(R.drawable.ic_baseline_pause_24);
         }*/
-        manager = listSong.getManager();
-        System.out.println(manager.isActivo());
+
         if(manager.isActivo()){
-            manager.getMedia().stop();
+            manager.Pause();
             btn_play.setBackgroundResource(R.drawable.ic_baseline_play_arrow_24);
         }else{
-            System.out.println("Aqui");
-            manager.getMedia().start();
+            manager.Play();
             btn_play.setBackgroundResource(R.drawable.ic_baseline_pause_24);
         }
 
     }
 
     @Override
-    public void onProgress(double time) {
+    public void onProgress(int time) {
+        System.out.println("Hola");
         Log.i("TIME", "onProgress: "+time);
     }
+
+    @Override
+    public void finish(boolean bol) {
+
+    }
+
 }

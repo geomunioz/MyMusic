@@ -1,5 +1,6 @@
 package com.example.mymusic;
 
 public interface MediaListener{
-    void onProgress(double time);
+    void onProgress(int time);
+    void finish(boolean bol);
 }
