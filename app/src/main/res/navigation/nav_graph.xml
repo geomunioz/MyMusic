@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_home2_to_search"
             app:destination="@id/search" />
+        <action
+            android:id="@+id/action_home2_to_player"
+            app:destination="@id/player" />
     </fragment>
     <fragment
         android:id="@+id/search"
@@ -27,5 +30,18 @@
         android:id="@+id/library"
         android:name="com.example.mymusic.library"
         android:label="fragment_library"
-        tools:layout="@layout/fragment_library" />
+        tools:layout="@layout/fragment_library" >
+        <action
+            android:id="@+id/action_library_to_category"
+            app:destination="@id/category" />
+    </fragment>
+    <fragment
+        android:id="@+id/category"
+        android:name="com.example.mymusic.category"
+        android:label="fragment_category"
+        tools:layout="@layout/fragment_category" />
+    <fragment
+        android:id="@+id/player"
+        android:name="com.example.mymusic.player"
+        android:label="player" />
 </navigation>

@@ -19,6 +19,8 @@ public class Song {
         //this.size = size;
     }
 
+    public long getUri(){ return  uri;}
+
     public String getTitle(){
         return title;
     }
@@ -26,5 +28,10 @@ public class Song {
     public String getArtist(){
         return artist;
     }
+
+    public String getAlbum(){
+        return album;
+    }
+    public int getDuration(){ return  duration; }
 
 }

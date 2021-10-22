@@ -11,16 +11,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStore;
 
 import java.sql.SQLOutput;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class DataManager {
 
     public static List<Song> getData(Context context){
         List<Song> listSong = new ArrayList<>();
-        SongViewModel model;
-        //Creacion de ViewModel
-        model = new ViewModelProvider(ViewModelStore::new).get(SongViewModel.class);
 
         ContentResolver contentResolver = context.getContentResolver();
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -67,6 +68,13 @@ public class DataManager {
             } while(songCursor.moveToNext());
         }
         songCursor.close();
+        Comparator<Song> comparador = new Comparator<Song>() {
+            @Override
+            public int compare(Song song, Song t1) {
+                return song.getTitle().compareTo(t1.getTitle());
+            }
+        };
+        Collections.sort(listSong, comparador);
 
         Uri urialbum = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
         Cursor cursorAlbum = contentResolver.query(urialbum,null, null, null);

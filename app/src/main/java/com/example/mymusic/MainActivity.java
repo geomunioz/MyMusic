@@ -6,12 +6,17 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.Intent;
 import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,37 +24,56 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MusicObserver{
+public class MainActivity extends AppCompatActivity implements MusicObserver, MediaListener{
     BottomNavigationView bottomNavigation;
     MaterialCardView playerMin;
-    player player = new player();
+    Button btn_play;
+    MediaPlayerManager manager;
+    //MediaPlayer mediaPlayer = new MediaPlayer();
+
     private ListSong listSong;
 
     private List<Song> myMusic;
-
+    private Song cancion;
+    boolean state;
+    Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpNavigation();
+
         playerMin = (MaterialCardView) findViewById(R.id.playerMin);
         myMusic = new ArrayList<>();
 
+        btn_play = (Button)findViewById(R.id.playMin);
+        btn_play.setBackgroundResource(R.drawable.ic_baseline_play_arrow_24);
+
         listSong = ListSong.getInstance();
         listSong.init(this);
+        //listSong.setContext(this);
+        manager = listSong.getManager();
+        manager.addListener(this);
+        manager.setContext(this);
+        //mediaPlayer = listSong.getMplayer();
         listSong.setMusica(DataManager.getData(this));
 
-        myMusic.addAll(listSong.getMusica());
+        myMusic.addAll(listSong.getListPlay());
+
+        state = false;
 
     }
 
@@ -66,22 +90,11 @@ public class MainActivity extends AppCompatActivity implements MusicObserver{
         return true;
     }
 
-    public void playerPlane(View view){
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        if(view.getId()==R.id.playerMin){
-            ft.add (R.id.constraintInit, player);
-            ft.commit();
-            bottomNavigation.setVisibility(View.GONE);
-            playerMin.setVisibility(View.GONE);
-        }
 
-        if(view.getId()==R.id.btn_Min){
-            ft.remove(player);
-            ft.commit();
-            bottomNavigation.setVisibility(View.VISIBLE);
-            playerMin.setVisibility(View.VISIBLE);
-        }
+
+    public void playerPlane(View view){
+        Intent i = new Intent(this, FistPlane.class);
+        startActivity(i);
     }
 
     @Override
@@ -96,11 +109,60 @@ public class MainActivity extends AppCompatActivity implements MusicObserver{
         SongChange(song);
     }
 
+    @Override
+    public void HistorialListChange(List<Song> historial) {
+
+    }
+
+    @Override
+    public void ActualCategory(String category) {
+
+    }
+
+    @Override
+    public void ActualMediaPlayer(MediaPlayer player) {
+        //mediaPlayer = player;
+    }
+
+    @Override
+    public void ActualListPlayer(List<Song> musicPlayer) {
+        myMusic = new ArrayList<>();
+        myMusic.addAll(musicPlayer);
+    }
+
     public void SongChange(Song song){
-        TextView titleSong = (TextView) findViewById(R.id.titleSong);
-        TextView nameArtist = (TextView) findViewById(R.id.nameArtist);
+        TextView titleSong = findViewById(R.id.titleSong);
+        TextView nameArtist = findViewById(R.id.nameArtist);
 
         titleSong.setText(song.getTitle());
         nameArtist.setText(song.getArtist());
+
+    }
+
+    public void playPause(View view) {
+
+        /*if(mediaPlayer.isPlaying()){
+            mediaPlayer.pause();
+            btn_play.setBackgroundResource(R.drawable.ic_baseline_play_arrow_24);
+        }else{
+            mediaPlayer.start();
+            btn_play.setBackgroundResource(R.drawable.ic_baseline_pause_24);
+        }*/
+        manager = listSong.getManager();
+        System.out.println(manager.isActivo());
+        if(manager.isActivo()){
+            manager.getMedia().stop();
+            btn_play.setBackgroundResource(R.drawable.ic_baseline_play_arrow_24);
+        }else{
+            System.out.println("Aqui");
+            manager.getMedia().start();
+            btn_play.setBackgroundResource(R.drawable.ic_baseline_pause_24);
+        }
+
+    }
+
+    @Override
+    public void onProgress(double time) {
+        Log.i("TIME", "onProgress: "+time);
     }
 }
