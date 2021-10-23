@@ -37,7 +37,11 @@ public class MediaPlayerManager {
                         try {
                             sleep(1000);
                             for (int i = 0; i<suscribers.size(); i++){
-                                suscribers.get(i).onProgress(media.getCurrentPosition());
+                                if(media.getCurrentPosition() != 0){
+                                    int valor = media.getCurrentPosition();
+                                    suscribers.get(i).onProgress(valor);
+                                }
+
                             }
                         } catch (InterruptedException e) {
                             e.printStackTrace();

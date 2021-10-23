@@ -45,7 +45,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:srcCompat="@drawable/album1" />
+        app:srcCompat="@drawable/opcion2" />
 
     <LinearLayout
         android:id="@+id/linearLayout4"
